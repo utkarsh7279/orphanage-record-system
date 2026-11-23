@@ -1,9 +1,8 @@
 services:
   - type: web
     name: orphanage-record-system-backend
-    runtime: native
-    buildCommand: apt-get update && apt-get install -y cmake ninja-build g++ libsqlite3-dev libssl-dev git && cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release && cmake --build build
-    startCommand: ORPHANAGE_PORT=$PORT ORPHANAGE_DB=/data/orphanage.db ORPHANAGE_WEB_DIR=web ./build/orphanage_system
+    runtime: docker
+    dockerfilePath: ./Dockerfile
     healthCheckPath: /api/health
     disk:
       name: orphanage-data

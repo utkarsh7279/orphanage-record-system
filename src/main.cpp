@@ -336,6 +336,21 @@ int main() {
         Manager manager(database, auth, records, report);
 
         httplib::Server server;
+        server.set_pre_routing_handler(
+            [](const httplib::Request& request, httplib::Response& response) {
+                response.set_header(
+                    "Access-Control-Allow-Origin",
+                    "https://orphanage-record-system.vercel.app");
+                response.set_header("Access-Control-Allow-Headers",
+                                    "Authorization, Content-Type");
+                response.set_header("Access-Control-Allow-Methods",
+                                    "GET, POST, PUT, DELETE, OPTIONS");
+                if (request.method == "OPTIONS") {
+                    response.status = 204;
+                    return httplib::Server::HandlerResponse::Handled;
+                }
+                return httplib::Server::HandlerResponse::Unhandled;
+            });
         installRoutes(server, database, auth, records, report, manager);
 
         int port = portFromEnvironment();
