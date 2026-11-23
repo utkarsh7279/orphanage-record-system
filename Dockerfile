@@ -22,4 +22,4 @@ COPY --from=build /app/web ./web
 
 RUN mkdir -p /data
 
-CMD ["/bin/sh", "-c", "exec env ORPHANAGE_PORT=${PORT:-8080} ORPHANAGE_DB=/data/orphanage.db ORPHANAGE_WEB_DIR=web ./build/orphanage_system"]
+CMD ["/bin/sh", "-c", "exec env ORPHANAGE_PORT=${PORT:-8080} ORPHANAGE_DB=${ORPHANAGE_DB:-/tmp/orphanage.db} ORPHANAGE_WEB_DIR=web ./build/orphanage_system"]

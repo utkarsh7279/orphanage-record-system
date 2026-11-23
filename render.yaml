@@ -3,8 +3,8 @@ services:
     name: orphanage-record-system-backend
     runtime: docker
     dockerfilePath: ./Dockerfile
+    plan: free
     healthCheckPath: /api/health
-    disk:
-      name: orphanage-data
-      mountPath: /data
-      sizeGB: 1
+    envVars:
+      - key: ORPHANAGE_DB
+        value: /tmp/orphanage.db
