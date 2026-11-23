@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Orphanage Record System</title>
+  <link rel="stylesheet" href="/styles.css?v=20261122">
+  <meta name="api-base" content="">
+</head>
+<body>
+  <main id="login-view" class="login-page">
+    <section class="login-card" aria-labelledby="login-title">
+      <div class="brand-mark" aria-hidden="true">ORS</div>
+      <p class="eyebrow">NGO staff access</p>
+      <h1 id="login-title">Orphanage Record System</h1>
+      <form id="login-form" novalidate>
+        <div id="login-error" class="alert alert-error" role="alert" hidden></div>
+        <label for="username">Username</label>
+        <input id="username" name="username" autocomplete="username" required>
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password"
+               autocomplete="current-password" required>
+        <button class="button button-primary" type="submit">Sign in</button>
+      </form>
+      <p class="demo-credentials">Demo: <strong>admin</strong> / <strong>demo1234</strong></p>
+    </section>
+  </main>
+
+  <div id="app-view" hidden>
+    <aside class="sidebar" aria-label="Main navigation">
+      <div class="sidebar-brand">
+        <div class="brand-mark small" aria-hidden="true">ORS</div>
+        <span>Record System</span>
+      </div>
+      <nav>
+        <button class="nav-button active" data-view="dashboard">Dashboard</button>
+        <button class="nav-button" data-view="records">Records</button>
+        <button class="nav-button" data-view="search">Search</button>
+        <button class="nav-button" data-view="reports">Reports</button>
+        <button class="nav-button admin-only" data-view="users">User Management</button>
+      </nav>
+    </aside>
+
+    <div class="main-shell">
+      <header class="topbar">
+        <button id="menu-button" class="icon-button" aria-label="Toggle navigation"
+                aria-expanded="false">Menu</button>
+        <div class="staff-info">
+          <span id="staff-name"></span>
+          <button id="logout-button" class="text-button" type="button">Log out</button>
+        </div>
+      </header>
+
+      <main class="content">
+        <div id="page-error" class="alert alert-error" role="alert" hidden></div>
+
+        <section class="page-view" id="dashboard-view">
+          <div class="page-heading">
+            <div><p class="eyebrow">Overview</p><h1>Dashboard</h1></div>
+          </div>
+          <div class="stat-grid">
+            <article class="stat-card"><span>Active records</span><strong id="active-count">—</strong></article>
+            <article class="stat-card"><span>Archived records</span><strong id="archived-count">—</strong></article>
+          </div>
+          <article class="panel">
+            <h2>Recently updated records</h2>
+            <div id="recent-list" class="record-list"></div>
+          </article>
+        </section>
+
+        <section class="page-view" id="records-view" hidden>
+          <div class="page-heading">
+            <div><p class="context">Record Management</p><h1>Records</h1></div>
+            <button id="add-record-button" class="button button-primary">Add record</button>
+          </div>
+          <div class="toolbar">
+            <label for="record-status">Status
+              <select id="record-status">
+                <option value="Active">Active</option>
+                <option value="Archived">Archived</option>
+                <option value="">All</option>
+              </select>
+            </label>
+          </div>
+          <div id="records-content"></div>
+        </section>
+
+        <section class="page-view" id="search-view" hidden>
+          <div class="page-heading">
+            <div><p class="context">Find a record</p><h1>Search</h1></div>
+          </div>
+          <form id="search-form" class="filter-panel">
+            <label for="search-query">Name or record ID
+              <input id="search-query" name="query" placeholder="e.g. Asha or 1">
+            </label>
+            <label for="search-status">Status
+              <select id="search-status" name="status">
+                <option value="Active">Active</option>
+                <option value="Archived">Archived</option>
+                <option value="">All</option>
+              </select>
+            </label>
+            <label for="search-gender">Gender
+              <select id="search-gender" name="gender">
+                <option value="">Any</option>
+                <option>Female</option><option>Male</option>
+                <option>Other</option><option>Not specified</option>
+              </select>
+            </label>
+            <button class="button button-primary" type="submit">Search</button>
+          </form>
+          <div id="search-results"></div>
+        </section>
+
+        <section class="page-view" id="reports-view" hidden>
+          <div class="page-heading">
+            <div><p class="context">Record summaries</p><h1>Reports</h1></div>
+          </div>
+          <form id="report-form" class="filter-panel">
+            <label for="report-from">Start date
+              <input id="report-from" name="from" type="date">
+            </label>
+            <label for="report-to">End date
+              <input id="report-to" name="to" type="date">
+            </label>
+            <button class="button button-primary" type="submit">Generate</button>
+          </form>
+          <div id="report-results"></div>
+        </section>
+
+        <section class="page-view" id="users-view" hidden>
+          <div class="page-heading">
+            <div><p class="context">Administrator</p><h1>User Management</h1></div>
+            <button id="add-user-button" class="button button-primary">Add staff user</button>
+          </div>
+          <div id="users-content"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <dialog id="record-dialog">
+    <form id="record-form" method="dialog">
+      <div class="dialog-heading">
+        <h2 id="record-dialog-title">Add record</h2>
+        <button type="button" class="icon-button" data-close-dialog
+                aria-label="Close">Close</button>
+      </div>
+      <div id="record-form-error" class="alert alert-error" role="alert" hidden></div>
+      <input id="record-id" type="hidden">
+      <div class="form-grid">
+        <label>First name<input id="record-first-name" maxlength="80" required></label>
+        <label>Last name<input id="record-last-name" maxlength="80" required></label>
+        <label>Date of birth<input id="record-dob" type="date"></label>
+        <label>Gender
+          <select id="record-gender">
+            <option>Not specified</option><option>Female</option>
+            <option>Male</option><option>Other</option>
+          </select>
+        </label>
+      </div>
+      <label>Notes<textarea id="record-notes" maxlength="2000" rows="4"></textarea></label>
+      <div class="dialog-actions">
+        <button type="button" class="button button-secondary" data-close-dialog>Cancel</button>
+        <button type="submit" class="button button-primary">Save record</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="user-dialog">
+    <form id="user-form" method="dialog">
+      <div class="dialog-heading">
+        <h2>Add staff user</h2>
+        <button type="button" class="icon-button" data-close-user-dialog
+                aria-label="Close">Close</button>
+      </div>
+      <div id="user-form-error" class="alert alert-error" role="alert" hidden></div>
+      <div class="form-grid">
+        <label>Full name<input id="user-name" maxlength="100" required></label>
+        <label>Username<input id="user-username" maxlength="80" required></label>
+        <label>Password<input id="user-password" type="password" minlength="8" required></label>
+        <label>Role
+          <select id="user-role"><option>Staff</option><option>Administrator</option></select>
+        </label>
+      </div>
+      <div class="dialog-actions">
+        <button type="button" class="button button-secondary" data-close-user-dialog>Cancel</button>
+        <button type="submit" class="button button-primary">Create user</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="delete-dialog" class="confirmation-dialog">
+    <div class="confirmation-icon" aria-hidden="true">!</div>
+    <h2>Delete record permanently?</h2>
+    <p id="delete-record-description">
+      This action cannot be undone. Archived records are safer to preserve.
+    </p>
+    <div class="dialog-actions">
+      <button type="button" id="cancel-delete-button"
+              class="button button-secondary">Keep record</button>
+      <button type="button" id="confirm-delete-button"
+              class="button button-danger">Delete permanently</button>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script src="/app.js?v=20261122"></script>
+</body>
+</html>

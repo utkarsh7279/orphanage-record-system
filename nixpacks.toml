@@ -1,0 +1,8 @@
+[phases.setup]
+nixPkgs = ["cmake", "gcc", "git", "ninja", "sqlite", "openssl"]
+
+[phases.build]
+cmds = ["cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release", "cmake --build build"]
+
+[start]
+cmd = "ORPHANAGE_PORT=$PORT ORPHANAGE_DB=/data/orphanage.db ORPHANAGE_WEB_DIR=web ./build/orphanage_system"

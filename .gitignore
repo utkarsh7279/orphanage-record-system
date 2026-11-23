@@ -1,0 +1,7 @@
+/build/
+/orphanage.db
+*.db-shm
+*.db-wal
+*.log
+.vercel/
+.copilot/
