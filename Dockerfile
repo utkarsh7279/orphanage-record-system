@@ -1,7 +1,7 @@
 FROM debian:bookworm-slim AS build
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential cmake git libsqlite3-dev libssl-dev ninja-build \
+    build-essential ca-certificates cmake git libsqlite3-dev libssl-dev ninja-build \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
